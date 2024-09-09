@@ -63,7 +63,7 @@ class GameEngine {
   private update(deltaTime: number) {
     this.bird.update(deltaTime);
     this.pipes.forEach(pipe => pipe.update(deltaTime));
-    
+
     // Add new pipes periodically
     if (this.pipes[this.pipes.length - 1].x < this.canvas.width - 300) { // Increased from 200
       this.pipes.push(new Pipe(this.canvas.width, this.canvas.height));
