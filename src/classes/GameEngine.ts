@@ -15,7 +15,8 @@ class GameEngine {
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d')!;
-    this.bird = new Bird(this.canvas.width / 4, this.canvas.height / 2); // Moved bird to 1/4 of canvas width
+    this.bird = new Bird(this.canvas.width / 4, this.canvas.height / 2);
+    this.bird.setFlapStrength(-7.5); // Increase flap strength (adjust this value as needed)
     this.pipes = [];
     this.drawWaitingScreen();
   }
@@ -26,6 +27,7 @@ class GameEngine {
       this.gameOver = false;
       this.score = 0;
       this.bird = new Bird(this.canvas.width / 4, this.canvas.height / 2);
+      this.bird.setFlapStrength(-7.5); // Increase flap strength here as well
       this.pipes = [new Pipe(this.canvas.width, this.canvas.height)];
       this.lastTime = performance.now();
       this.animate();
@@ -42,6 +44,8 @@ class GameEngine {
   onScreenClick() {
     if (this.isRunning) {
       this.bird.flap();
+    } else if (this.gameOver) {
+      this.start();
     }
   }
 

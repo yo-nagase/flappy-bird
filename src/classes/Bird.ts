@@ -33,6 +33,10 @@ class Bird {
   flap() {
     this.velocity = this.flapStrength;
   }
+
+  setFlapStrength(strength: number) {
+    this.flapStrength = strength;
+  }
 }
 
 export default Bird;
