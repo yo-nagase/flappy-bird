@@ -143,6 +143,27 @@ class GameEngine {
     this.ctx.fillText(`High Score: ${this.highScore}`, this.canvas.width / 2, this.canvas.height / 2 + 30);
   }
 
+  private checkHighScore() {
+    const highScore = localStorage.getItem('highScore');
+    if (highScore === null) {
+      localStorage.setItem('highScore', this.score.toString());
+    } else {
+      const currentHighScore = parseInt(highScore, 10);
+      if (this.score > currentHighScore && this.score > 0) {
+        localStorage.setItem('highScore', this.score.toString());
+        this.showMessage('New high score!');
+      }
+    }
+  }
+
+  private showMessage(message: string) {
+    if (this.ctx) {
+      this.ctx.fillStyle = 'white';
+      this.ctx.font = '30px Arial';
+      this.ctx.fillText(message, this.canvas.width / 2 - 100, this.canvas.height / 2 - 50);
+    }
+  }
+
   getScore(): number {
     return this.score;
   }
