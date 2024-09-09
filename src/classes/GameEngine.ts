@@ -10,6 +10,7 @@ class GameEngine {
   private lastTime: number = 0;
   private isRunning: boolean = false;
   private score: number = 0;
+  private highScore: number = 0;
   private gameOver: boolean = false;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -18,7 +19,17 @@ class GameEngine {
     this.bird = new Bird(this.canvas.width / 4, this.canvas.height / 2);
     this.bird.setFlapStrength(-7.5); // Increase flap strength (adjust this value as needed)
     this.pipes = [];
+    this.loadHighScore();
     this.drawWaitingScreen();
+  }
+
+  private loadHighScore() {
+    const storedHighScore = localStorage.getItem('flappyHighScore');
+    this.highScore = storedHighScore ? parseInt(storedHighScore, 10) : 0;
+  }
+
+  private saveHighScore() {
+    localStorage.setItem('flappyHighScore', this.highScore.toString());
   }
 
   start() {
@@ -83,6 +94,10 @@ class GameEngine {
     // Check collisions
     if (this.checkCollisions()) {
       this.gameOver = true;
+      if (this.score > this.highScore) {
+        this.highScore = this.score;
+        this.saveHighScore();
+      }
       this.stop();
     }
   }
@@ -98,6 +113,10 @@ class GameEngine {
     this.ctx.textAlign = 'left';
     this.ctx.fillText(`Score: ${this.score}`, 10, 30);
 
+    // Draw high score
+    this.ctx.textAlign = 'right';
+    this.ctx.fillText(`High Score: ${this.highScore}`, this.canvas.width - 10, 30);
+
     if (this.gameOver) {
       this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -106,6 +125,9 @@ class GameEngine {
       this.ctx.textAlign = 'center';
       this.ctx.fillText(`Game Over`, this.canvas.width / 2, this.canvas.height / 2 - 50);
       this.ctx.fillText(`Final Score: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 50);
+      if (this.score === this.highScore) {
+        this.ctx.fillText(`New High Score!`, this.canvas.width / 2, this.canvas.height / 2 + 100);
+      }
     }
   }
 
@@ -118,6 +140,7 @@ class GameEngine {
     this.ctx.font = '20px Arial';
     this.ctx.textAlign = 'center';
     this.ctx.fillText('Click "Start Game" to begin', this.canvas.width / 2, this.canvas.height / 2);
+    this.ctx.fillText(`High Score: ${this.highScore}`, this.canvas.width / 2, this.canvas.height / 2 + 30);
   }
 
   getScore(): number {
