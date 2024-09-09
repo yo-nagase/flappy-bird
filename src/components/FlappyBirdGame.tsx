@@ -58,7 +58,7 @@ const FlappyBirdGame: React.FC = () => {
             onClick={handleStart}
             style={{
               position: 'absolute',
-              top: '50%',
+              top: '90%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
               fontSize: '24px',
