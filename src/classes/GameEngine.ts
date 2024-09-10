@@ -38,10 +38,15 @@ class GameEngine {
       this.gameOver = false;
       this.score = 0;
       this.bird = new Bird(this.canvas.width / 4, this.canvas.height / 2);
-      this.bird.setFlapStrength(-7.5); // Increase flap strength here as well
+      this.bird.setFlapStrength(-7.5);
       this.pipes = [new Pipe(this.canvas.width, this.canvas.height)];
       this.lastTime = performance.now();
-      this.animate();
+      
+      // Draw the initial state
+      this.draw();
+      
+      // Start the animation loop
+      this.animate(this.lastTime);
     }
   }
 
@@ -74,7 +79,7 @@ class GameEngine {
   private update(deltaTime: number) {
     this.bird.update(deltaTime);
     this.pipes.forEach(pipe => pipe.update(deltaTime));
-    
+
     // Add new pipes periodically
     if (this.pipes[this.pipes.length - 1].x < this.canvas.width - 300) { // Increased from 200
       this.pipes.push(new Pipe(this.canvas.width, this.canvas.height));
