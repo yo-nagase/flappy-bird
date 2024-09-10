@@ -7,6 +7,7 @@ class Pipe {
   speed: number;
   color: string;
   borderColor: string;
+  gradientColor: string;
   canvasHeight: number;
   passed: boolean = false;
 
@@ -15,8 +16,9 @@ class Pipe {
     this.x = canvasWidth;
     this.gap = 200;
     this.speed = 3;
-    this.color = '#4CAF50';
-    this.borderColor = '#45a049';
+    this.color = '#FFA500'; // Orange
+    this.borderColor = '#FF8C00'; // Dark orange
+    this.gradientColor = '#FFD700'; // Gold (lighter orange)
     this.canvasHeight = canvasHeight;
 
     const availableHeight = canvasHeight - this.gap;
@@ -40,7 +42,7 @@ class Pipe {
   private drawPipePart(ctx: CanvasRenderingContext2D, y: number, height: number, isBottom: boolean) {
     const gradient = ctx.createLinearGradient(this.x, y, this.x + this.width, y + height);
     gradient.addColorStop(0, this.color);
-    gradient.addColorStop(1, '#45a049');
+    gradient.addColorStop(1, this.gradientColor);
 
     ctx.fillStyle = gradient;
     ctx.fillRect(this.x, y, this.width, height);

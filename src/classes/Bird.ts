@@ -14,6 +14,7 @@ class Bird {
     this.y = y;
     this.width = 40;
     this.height = 30;
+    this.velocity = 0;
   }
 
   update(deltaTime: number) {
