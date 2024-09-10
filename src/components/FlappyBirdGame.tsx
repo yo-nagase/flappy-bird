@@ -5,7 +5,7 @@ import GameEngine from '../classes/GameEngine';
 
 const FlappyBirdGame: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [gameEngine, setGameEngine] = useState<GameEngine | null>(null);
+  const gameEngineRef = useRef<GameEngine | null>(null);
   const [isWaiting, setIsWaiting] = useState(true);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
@@ -13,27 +13,39 @@ const FlappyBirdGame: React.FC = () => {
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
-      canvas.width = 800;
+      canvas.width = 900;
       canvas.height = 600;
-      const newGameEngine = new GameEngine(canvas);
-      setGameEngine(newGameEngine);
+      gameEngineRef.current = new GameEngine(canvas);
     }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        event.preventDefault();
+        gameEngineRef.current?.onScreenClick();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   useEffect(() => {
-    if (gameEngine) {
+    if (gameEngineRef.current) {
       const intervalId = setInterval(() => {
-        setScore(gameEngine.getScore());
-        setGameOver(gameEngine.isGameOver());
+        setScore(gameEngineRef.current!.getScore());
+        setGameOver(gameEngineRef.current!.isGameOver());
       }, 100);
 
       return () => clearInterval(intervalId);
     }
-  }, [gameEngine]);
+  }, []);
 
   const handleStart = () => {
-    if (gameEngine && (isWaiting || gameOver)) {
-      gameEngine.start();
+    if (gameEngineRef.current && (isWaiting || gameOver)) {
+      gameEngineRef.current.start();
       setIsWaiting(false);
       setGameOver(false);
     }
@@ -41,7 +53,7 @@ const FlappyBirdGame: React.FC = () => {
 
   const handleClick = () => {
     if (!isWaiting && !gameOver) {
-      gameEngine?.onScreenClick();
+      gameEngineRef.current?.onScreenClick();
     }
   };
 
